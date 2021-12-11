@@ -3,8 +3,8 @@ Description=Logdog service
 After=network.target
 
 [Service]
-WorkingDirectory=%%LOGDOG_PATH%%/logdog
-ExecStart=logdog -c %%LOGDOG_PATH%%/logdog/logdog.json
+WorkingDirectory=%%LOGDOG_PATH%%
+ExecStart=logdog -c %%LOGDOG_PATH%%/logdog.json
 Type=simple
 Restart=always
 RestartSec=10s
