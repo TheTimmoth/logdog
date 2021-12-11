@@ -1,0 +1,90 @@
+#!/usr/bin/python3
+"""Send an email
+
+Filename: log2mail.py
+Author: Tim Schlottmann
+Copyright (c) 2021 Tim Schlottmann
+
+License: `MIT`_ (Please look at license of surrounding project)
+
+This file runs `log2mail`, a module that sends an email.
+
+The following command line args are necessary:
+    -c /path/to/config            Path to config file
+    --config /path/to/config
+
+    -s "subject"                  Subject of the mail
+    --subject "subject"
+
+    -m "content"                  Content of the mail
+    --message "content"
+
+    -f "noreply@example.com"      Sender address of the mail
+    --from "noreply@example.com"
+
+    -t "test@example.com"         Receiver address of the mail
+    --to "test@example.com"
+
+    -a /path/to/textfile          Path to a textfile that gets attached
+    --attach /path/to/textfile
+
+    --tty                         Message content uses stdin as input
+
+.. _MIT:
+   https://github.com/TheTimmoth/logdog/blob/main/LICENSE
+"""
+
+import os
+import sys
+
+from log2mail import log2mail
+
+
+def main():
+  # Default values
+  config_path = "./log2mail.json"
+
+  # Default message values
+  subject: str = "sendmail.py Mail"
+  message_text: str = "This mail was created by sendmail.py script."
+  sender: str = "sendmail.py script <noreply@example.com>"
+  recipient: str = "Unknown user <noreply@example.com>"
+  tty_for_message: bool = False
+  file_path: str = None
+
+  i = 0
+  while i < len(sys.argv):
+    if sys.argv[i].casefold() == "--config" or sys.argv[i].casefold() == "-c":
+      i += 1
+      config_path = sys.argv[i]
+    elif sys.argv[i].casefold() == "--subject" or sys.argv[i].casefold(
+    ) == "-s":
+      i += 1
+      subject = sys.argv[i]
+    elif sys.argv[i].casefold() == "--message" or sys.argv[i].casefold(
+    ) == "-m":
+      i += 1
+      message_text = sys.argv[i]
+    elif sys.argv[i].casefold() == "--from" or sys.argv[i].casefold() == "-f":
+      i += 1
+      sender = sys.argv[i]
+    elif sys.argv[i].casefold() == "--to" or sys.argv[i].casefold() == "-t":
+      i += 1
+      recipient = sys.argv[i]
+    elif sys.argv[i].casefold() == "--attach" or sys.argv[i].casefold(
+    ) == "-a":
+      i += 1
+      file_path = sys.argv[i]
+    elif sys.argv[i].casefold() == "--tty":
+      tty_for_message = True
+    i += 1
+
+  # Get tty input
+  if tty_for_message:
+    message_text = sys.stdin.read()
+
+  log2mail(config_path, subject, message_text, sender, recipient, file_path)
+
+
+if __name__ == "__main__":
+  main()

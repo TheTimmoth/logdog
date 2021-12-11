@@ -1,0 +1,9 @@
+{
+  "smtp": {
+    "server": "mail.example.com",
+    "username": "noreply@example.com",
+    "receiver": "admin@examle.com",
+    "secret": "Some random chars that are used to decrypt encrypted password below",
+    "password": "Some encrypted password data"
+  }
+}

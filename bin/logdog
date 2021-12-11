@@ -1,0 +1,69 @@
+#!/usr/bin/python3
+"""Logdog - look for and handle events occuring in logfiles
+
+Filename: logdog.py
+Author: Tim Schlottmann
+Copyright (c) 2021 Tim Schlottmann
+
+License: `MIT`_ (Please look at license of surrounding project)
+
+This file contains `logdog`, a daemon that can spawn handlers to detect
+events in the `stdout` output of watcher processes like `tail`.
+
+The configuration is provided via `sys.argv`.
+
+The configuration is obtained from a config file. Please look at the
+`readme`_ file and the `example config`_ for further information on
+how to provide the correct settings.
+
+Examples:
+    >>> logdog -c /path/to/config.json
+
+Functions:
+    logdog(str): the logdog daemon
+
+Used terms:
+    Handler: represents one watcher that is looking for events
+    Watcher: process whose stdout is scanned for events
+    Event: 1) A pattern that is discovered in stdout of a watcher
+           2) An event that occurred in logdog itself
+
+.. _MIT:
+   https://github.com/TheTimmoth/logdog/blob/main/LICENSE
+
+.. _readme:
+    https://github.com/TheTimmoth/logdog/blob/main/README.md
+
+.. _example config:
+    https://example.com
+
+"""
+
+import os
+import sys
+
+from logdog import logdog
+
+__config_file = ""  # Path to config file
+
+
+def __parse_args():
+  """ Parse `sys.argv`
+  """
+  global __config_file
+
+  i = 1
+  while i < len(sys.argv):
+    if sys.argv[i].casefold() == "--config" or sys.argv[i].casefold() == "-c":
+      i += 1
+      __config_file = sys.argv[i]
+    i += 1
+
+
+def main():
+  __parse_args()
+  logdog(config_file=__config_file)
+
+
+if __name__ == "__main__":
+  main()

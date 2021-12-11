@@ -1,0 +1,13 @@
+[Unit]
+Description=Logdog service
+After=network.target
+
+[Service]
+WorkingDirectory=%%LOGDOG_PATH%%/logdog
+ExecStart=logdog -c %%LOGDOG_PATH%%/logdog/logdog.json
+Type=simple
+Restart=always
+RestartSec=10s
+
+[Install]
+WantedBy=multi-user.target
