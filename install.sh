@@ -39,6 +39,7 @@ install_service() {
   echo "Installing logdog service..."
 
   # Insert PWD into logdog.service
+  cp -pn  $PWD/service/logdog.service.template $PWD/service/logdog.service
   sed -i s*%%LOGDOG_PATH%%*$PWD*g $PWD/service/logdog.service
 
   ln -s $PWD/service/logdog.service /lib/systemd/system
