@@ -234,20 +234,24 @@ def __handler(handler_name: str):
       if f.poll():
         return
       history.append(f.stdout.readline().decode("UTF-8").strip())
+      if config.debug:
+        print(f"{handler_name}[STDOUT]: {history[-1]}")
 
-    # Check if an event has occurred
+    # Loop through all possible events...
     for p in events:
+      # and check if an event has occurred
       if p[1].search(history[current_line]):
         # Check if handler is still alive
         if f.poll():
           return
 
         # Append necessary number of next lines
-        [
-            history.append(f.stdout.readline().decode("UTF-8").strip())
-            for _ in range(p[3])
-        ]
-        print(f"{handler_name} - {p[0]}: {history[current_line]}")
+        for _ in range(p[3]):
+          history.append(f.stdout.readline().decode("UTF-8").strip())
+          if config.debug:
+            print(f"{handler_name}[STDOUT]: {history[-1]}")
+
+        print(f"{handler_name}[{p[0]}]: {history[current_line]}")
 
         # Print num_prev_lines + num_next_lines + 1 (current_line) lines
         handle_event(
