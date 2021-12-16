@@ -11,11 +11,20 @@ check_prerequisits() {
     echo "This script has to be run as root!"
     exit 1
   fi
+
+  which python3 > /dev/null 2>&1
+  if ! [[ -z $? ]]
+  then
+    echo "Please install python3 first, before installing this program! (Or make it available via \$PATH)"
+    exit 2
+  fi
+
+  # TODO: Check for pip installation using "python3 -m pip --version"
 }
 
 install_python() {
   echo "Install python module"
-  pip install -e ./
+  python3 -m pip install -e ./
 }
 
 install_bin() {
@@ -58,3 +67,5 @@ check_prerequisits
 install_python
 install_bin
 install_service
+
+exit 0
