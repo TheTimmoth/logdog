@@ -13,7 +13,7 @@ check_prerequisits() {
   fi
 
   which python3 > /dev/null 2>&1
-  if ! [[ -z $? ]]
+  if [[ $? -ne 0 ]]
   then
     echo "Please install python3 first, before installing this program! (Or make it available via \$PATH)"
     exit 2
@@ -23,8 +23,11 @@ check_prerequisits() {
 }
 
 install_python() {
-  echo "Install python module"
+  echo "Install python module..."
+
   python3 -m pip install -e ./
+
+  echo "Done..."
 }
 
 install_bin() {
