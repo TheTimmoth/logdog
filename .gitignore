@@ -2,7 +2,7 @@
 .vscode
 log2mail.json
 logdog.json
-service/logdog.template
+service/logdog.service
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
