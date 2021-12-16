@@ -5,7 +5,7 @@ echo "Author: Tim Schlottmann"
 echo "(C) 2021"
 
 
-check_prerequisits() {
+check_prerequisites() {
   if [ $UID -ne 0 ]
   then
     echo "This script has to be run as root!"
@@ -66,7 +66,7 @@ install_service() {
 # Change path to script directory
 cd $(dirname $0)
 
-check_prerequisits
+check_prerequisites
 install_python
 install_bin
 install_service
