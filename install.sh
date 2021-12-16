@@ -5,7 +5,7 @@ echo "Author: Tim Schlottmann"
 echo "(C) 2021"
 
 
-check_prerequisits() {
+check_prerequisites() {
   if [ $UID -ne 0 ]
   then
     echo "This script has to be run as root!"
@@ -13,7 +13,7 @@ check_prerequisits() {
   fi
 
   which python3 > /dev/null 2>&1
-  if ! [[ -z $? ]]
+  if [[ $? -ne 0 ]]
   then
     echo "Please install python3 first, before installing this program! (Or make it available via \$PATH)"
     exit 2
@@ -23,8 +23,11 @@ check_prerequisits() {
 }
 
 install_python() {
-  echo "Install python module"
+  echo "Install python module..."
+
   python3 -m pip install -e ./
+
+  echo "Done..."
 }
 
 install_bin() {
@@ -63,7 +66,7 @@ install_service() {
 # Change path to script directory
 cd $(dirname $0)
 
-check_prerequisits
+check_prerequisites
 install_python
 install_bin
 install_service

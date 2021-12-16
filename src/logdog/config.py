@@ -36,8 +36,11 @@ Functions:
 
 import json
 
+import logdog.handlers as handlers
+
 __config = {}  # Config data
 
+debug = False
 
 def parse_config(config_file: str):
   """Set up the configuration
@@ -48,9 +51,15 @@ def parse_config(config_file: str):
   """
 
   global __config
+  global debug
+
   with open(config_file, "r") as f:
     __config = json.load(f)
 
+  try:
+    debug = __config["logdog"]["debug"]
+  except KeyError as e:
+    pass
 
 def get_handler_names() -> list:
   """Get the names of handlers

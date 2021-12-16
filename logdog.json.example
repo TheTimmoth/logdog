@@ -3,7 +3,8 @@
     "default_actions": [
       "file"
     ],
-    "default_watcher": "tail"
+    "default_watcher": "tail",
+    "debug": false
   },
   "actions": {
     "file": {

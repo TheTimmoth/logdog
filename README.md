@@ -10,16 +10,16 @@ Logdog is a small program that spawns handler that able to scan the output of so
 
 2) `cd` into the newly created directory `logdog`
 
-3) *Optional: If you want to change the path to the config file please run*
+3) Please run
+    ```
+    ./install.sh
+    ```
+
+4) *Optional: If you want to change the path to the config file please run*
     ```bash
     editor ./service/logdog.service
     ```
     *and change `-c %%LOGDOG_PATH%%/logdog.json` to the new config file location.*
-
-4) Please run
-    ```
-    ./install.sh
-    ```
 
 ## Usage
 1) Create a settings file that contains the handlers, watchers and events. Please look at section [Configuration](#Configuration) to write a config.
