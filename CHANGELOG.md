@@ -30,7 +30,7 @@ First beta version (16.12.2021)
 
 # Release 1.0.0b2
 
-First beta version (20.12.2021)
+Second beta version (20.12.2021)
 
 * New features
 * Changes
