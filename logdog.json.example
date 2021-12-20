@@ -24,7 +24,7 @@
       "cwd": "../",
       "command": [
         "tail",
-        "-f",
+        "-F",
         "$FILE"
       ]
     }

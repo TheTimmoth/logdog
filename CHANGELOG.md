@@ -15,7 +15,7 @@ Initial release (11.12.2021)
   - One handler checks `stdout` of exactly one watcher (e.g. `tail`)
 
 
-# Release 1.0.0b1
+# Release 1.0.0b2
 
 First beta version (16.12.2021)
 
@@ -26,3 +26,13 @@ First beta version (16.12.2021)
   - Service: rename `logdog.service` to `logdog.service.template` to facilitate updates
 * Fixes
   - Logdog: output does not appear in `journalctl` instantly
+
+
+# Release 1.0.0b2
+
+First beta version (20.12.2021)
+
+* New features
+* Changes
+* Fixes
+  - Logdog: change args of watcher `tail` from `-f` to `-F` to support rolling logs
