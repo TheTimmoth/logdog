@@ -99,6 +99,10 @@ def handle_event(handler_name: str,
       except Exception as e:
         __output_lock.release()
         s = handle_exception()
+        if a in config.get_default_action_names():
+          l = config.get_default_action_names()
+          l.remove(a)
+          config.set_default_action_names(l)
         handle_event("logdog", "action_failed", f"Action {a} failed",
                      f"Action {a} produced the following exception:\n{s}")
       else:

@@ -38,3 +38,4 @@ Second beta version (XX.XX.XXXX)
 * Changes
 * Fixes
   - Logdog: change args of watcher `tail` from `-f` to `-F` to support rolling logs
+  - Logdog: fix infinite recursion if a default action fails

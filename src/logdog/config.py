@@ -22,6 +22,7 @@ Functions:
         action of handler
     get_default_action_names() -> list: get names of the default
         actions
+    set_default_action_names(list): set default action names
     get_default_handler() -> dict: get default handler data
     get_default_event() -> dict: get default action data
     get_watcher_names() -> list: get watcher names
@@ -42,6 +43,7 @@ __config = {}  # Config data
 
 debug = False
 
+
 def parse_config(config_file: str):
   """Set up the configuration
 
@@ -60,6 +62,7 @@ def parse_config(config_file: str):
     debug = __config["logdog"]["debug"]
   except KeyError as e:
     pass
+
 
 def get_handler_names() -> list:
   """Get the names of handlers
@@ -201,6 +204,22 @@ def get_default_action_names() -> list:
   """
 
   return list(__config["logdog"]["default_actions"])
+
+
+def set_default_action_names(l: list):
+  """Set the names of the default actions
+
+  Returns:
+      list: The names of the default actions
+
+  Raises:
+      KeyError: if config file violates `reference`_
+
+  .. _reference:
+     https://example.com (TODO)
+  """
+
+  __config["logdog"]["default_actions"] = l
 
 
 def get_watcher_names() -> list:
