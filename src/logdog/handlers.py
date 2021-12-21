@@ -100,6 +100,8 @@ def handle_event(handler_name: str,
         __output_lock.release()
         s = handle_exception()
         if a in config.get_default_action_names():
+          # Remove action from __config["logdog"]["default_actions"] to
+          # prevent from infinite loop
           l = config.get_default_action_names()
           l.remove(a)
           config.set_default_action_names(l)
