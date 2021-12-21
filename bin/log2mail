@@ -83,7 +83,8 @@ def main():
   if tty_for_message:
     message_text = sys.stdin.read()
 
-  log2mail(config_path, subject, message_text, sender, recipient, file_path)
+  log2mail(config_path, subject, message_text, sender, [recipient],
+           [file_path])
 
 
 if __name__ == "__main__":

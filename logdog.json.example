@@ -13,7 +13,9 @@
     },
     "log2mail": {
       "from": "noreply@example.com <noreply@example.com>",
-      "to": "Important Receiver <admin@example.com>",
+      "to": [
+        "Important Receiver <admin@example.com>"
+      ],
       "subject": "${BRIEF_INFORMATION}",
       "message": "${DETAILED_INFORMATION}",
       "config": "../log2mail.json"

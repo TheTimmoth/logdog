@@ -30,9 +30,11 @@ First beta version (16.12.2021)
 
 # Release 1.0.0b2
 
-Second beta version (20.12.2021)
+Second beta version (XX.XX.XXXX)
 
 * New features
+  - Log2Mail: add supoort for multiple recipients
+  - Log2Mail: add support for multiple attachments
 * Changes
 * Fixes
   - Logdog: change args of watcher `tail` from `-f` to `-F` to support rolling logs

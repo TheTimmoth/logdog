@@ -9,28 +9,31 @@ License: `MIT`_ (Please look at license of surrounding project)
 This file contains `log2mail`, a module that sends an email.
 
 Functions:
-    log2mail(str, str, str, str, str, str): sends an email
+    log2mail(str, str, str, str, list, list): sends an email
 
 .. _MIT:
    https://github.com/TheTimmoth/logdog/blob/main/LICENSE
 """
 
-from json.decoder import JSONDecodeError
-import sys
-import smtplib, ssl
+import email
 import json
+import os
+import smtplib
+import ssl
+import sys
 from cryptography.fernet import Fernet
+from email.mime.base import MIMEBase
+from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from os import path
 
 
 def log2mail(config_path: str,
              subject: str,
              message_text: str,
              sender: str,
-             recipient: str,
-             file_path: str = None):
+             recipients: list,
+             file_paths: list = None):
   """Send an email
 
   Args:
@@ -38,10 +41,13 @@ def log2mail(config_path: str,
       subject (str): subject of the mail
       message_text (str): content of the mail
       sender (str): sender of the mail
-      recipient (str): recipient of the mail
-      file_path (str, optional): Path to a text file that gets
+      recipients (list): recipient of the mail
+      file_paths (list, optional): Path to a text file that gets
           attached. Defaults to None.
   """
+
+  if file_paths == None:
+    file_paths = []
 
   # Encoded password
   try:
@@ -52,7 +58,7 @@ def log2mail(config_path: str,
     sys.stderr.write(str(e) + "\n")
     sys.stderr.write("Exiting...\n")
     exit(1)
-  except JSONDecodeError as e:
+  except json.decoder.JSONDecodeError as e:
     sys.stderr.write(
         f"Error: config file {config_path} contains invalid json\n")
     sys.stderr.write(str(e) + "\n")
@@ -74,22 +80,26 @@ def log2mail(config_path: str,
   context = ssl.create_default_context()
 
   # Create message
-  message = MIMEMultipart("mixed")
+  message = MIMEMultipart()
   message["Subject"] = subject
   message["From"] = sender
-  message["To"] = recipient
+  message["To"] = ", ".join(recipients)
 
   # Attach message text
-  message.attach(MIMEText(message_text, "plain"))
+  message.attach(MIMEText(message_text))
 
   # Attach file
-  if file_path:
-    with open(file_path, "r", encoding="utf8") as f:
-      attachment = MIMEText(f.read(), "plain")
-    attachment.add_header("Content-Disposition",
-                          "attachment",
-                          filename=f"{path.basename(file_path)}")
-    message.attach(attachment)
+  for fp in file_paths:
+    try:
+      with open(fp, "rb") as f:
+        attachment = MIMEApplication(f.read())
+    except FileNotFoundError:
+      pass
+    else:
+      attachment.add_header("Content-Disposition",
+                            "attachment",
+                            filename=f"{os.path.basename(fp)}")
+      message.attach(attachment)
 
   message = message.as_bytes()
 

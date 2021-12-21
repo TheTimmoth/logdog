@@ -34,6 +34,9 @@ def log2mail(detailed_information: str, brief_information: str, stdout: str):
 
   print("Sending mail...")
 
+  for s in action_data["to"]:
+    strings.parse_string(s, detailed_information, brief_information, stdout),
+
   l2m(
       strings.parse_string(action_data["config"], detailed_information,
                            brief_information, stdout),
@@ -43,6 +46,5 @@ def log2mail(detailed_information: str, brief_information: str, stdout: str):
                            brief_information, stdout),
       strings.parse_string(action_data["from"], detailed_information,
                            brief_information, stdout),
-      strings.parse_string(action_data["to"], detailed_information,
-                           brief_information, stdout),
+      action_data["to"],
   )
