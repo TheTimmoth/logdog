@@ -13,11 +13,14 @@ Functions:
    https://github.com/TheTimmoth/logdog/blob/main/LICENSE
 """
 
+import time
+
 import logdog.config as config
 import logdog.strings as strings
 
 
-def file(detailed_information: str, brief_information: str, stdout: str):
+def file(detailed_information: str, brief_information: str, stdout: str,
+         timestamp: time.struct_time):
   """Sends a mail according to the `config`
 
   Args:
@@ -32,7 +35,10 @@ def file(detailed_information: str, brief_information: str, stdout: str):
 
   with open(action_data["path"], "a") as f:
     f.write(
-        strings.parse_string(action_data["format"],
-                             detailed_information=detailed_information,
-                             brief_information=brief_information,
-                             stdout=stdout))
+        strings.parse_string(
+            action_data["format"],
+            detailed_information=detailed_information,
+            brief_information=brief_information,
+            stdout=stdout,
+            timestamp=timestamp,
+        ))

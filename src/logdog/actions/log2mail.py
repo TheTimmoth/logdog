@@ -14,6 +14,7 @@ Functions:
 """
 
 import sys
+import time
 
 from log2mail import log2mail as l2m
 
@@ -21,7 +22,8 @@ import logdog.config as config
 import logdog.strings as strings
 
 
-def log2mail(detailed_information: str, brief_information: str, stdout: str):
+def log2mail(detailed_information: str, brief_information: str, stdout: str,
+             timestamp: time.struct_time):
   """Sends a mail according to the `config`
 
   Args:
@@ -39,12 +41,12 @@ def log2mail(detailed_information: str, brief_information: str, stdout: str):
 
   l2m(
       strings.parse_string(action_data["config"], detailed_information,
-                           brief_information, stdout),
+                           brief_information, stdout, timestamp),
       strings.parse_string(action_data["subject"], detailed_information,
-                           brief_information, stdout),
+                           brief_information, stdout, timestamp),
       strings.parse_string(action_data["message"], detailed_information,
-                           brief_information, stdout),
+                           brief_information, stdout, timestamp),
       strings.parse_string(action_data["from"], detailed_information,
-                           brief_information, stdout),
+                           brief_information, stdout, timestamp),
       action_data["to"],
   )
