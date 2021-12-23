@@ -80,7 +80,7 @@ def handle_event(handler_name: str,
       handle_event(
           "logdog",
           "no_handler",
-          brief_information=f"Logdog: {handler_name}:{event_name} - no action",
+          brief_information=f"[logdog] {handler_name}:{event_name} - no action",
           detailed_information=
           f"$TIMESTAMP logdog[no_handler]: No specific or default action for event {event_name} of handler {handler_name}",
           timestamp=time.localtime(),
@@ -111,7 +111,7 @@ def handle_event(handler_name: str,
         handle_event(
             "logdog",
             "action_failed",
-            f"Action {a} failed",
+            f"[logdog] Action {a} failed",
             f"$TIMESTAMP logdog[no_handler]: Action {a} produced the following exception:\n{s}",
             timestamp=time.localtime(),
         )
@@ -132,7 +132,7 @@ def handle_exit(*args):
       "logdog",
       "handle_exit",
       detailed_information="$TIMESTAMP logdog[handle_exit]: Logdog exited",
-      brief_information="Logdog exited",
+      brief_information="[logdog] Program exited",
       timestamp=time.localtime(),
   )
   for p in __processes:
@@ -240,7 +240,7 @@ def __handler(handler_name: str):
       detailed_information=
       f"$TIMESTAMP logdog[watcher_started]: Watcher {command[0]} of handler {handler_name} started successfully. cwd: {cwd}",
       brief_information=
-      f"Watcher {handler_name}:{command[0]} started successfully",
+      f"[logdog] Watcher {handler_name}:{command[0]} started successfully",
       timestamp=time.localtime(),
   )
 
@@ -305,7 +305,7 @@ def monitor_handlers():
             "worker_died",
             detailed_information=
             f"$TIMESTAMP logdog[worker_died]: {p.name} died",
-            brief_information="Logdog: worker died",
+            brief_information=f"[logdog] Worker {p.name} died",
             timestamp=time.localtime(),
         )
         __processes.remove(p)

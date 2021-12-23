@@ -37,6 +37,7 @@ Second beta version (XX.XX.XXXX)
   - Log2Mail: add supoort for multiple recipients
   - Log2Mail: add support for multiple attachments
 * Changes
+  - Logdog: update internal event descriptions
 * Fixes
   - Logdog: change args of watcher `tail` from `-f` to `-F` to support rolling logs
   - Logdog: fix infinite recursion if a default action fails

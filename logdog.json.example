@@ -41,7 +41,7 @@
           "next_lines": 2,
           "prev_lines": 0,
           "regexp": "sshd\\[[0-9]*\\]\\: Accepted publickey",
-          "brief_information": "SSH: successfull login",
+          "brief_information": "[ssh] successfull login",
           "detailed_information": "$STDOUT",
           "actions": [
             "file"
@@ -52,7 +52,7 @@
           "next_lines": 1,
           "prev_lines": 0,
           "regexp": "su: \\(to [a-zA-Z_-]*\\)",
-          "brief_information": "su: success",
+          "brief_information": "[su] success",
           "detailed_information": "$STDOUT",
           "actions": [
             "file"
@@ -63,7 +63,7 @@
           "next_lines": 0,
           "prev_lines": 1,
           "regexp": "su: FAILED SU",
-          "brief_information": "su: failure",
+          "brief_information": "[su] failure",
           "detailed_information": "$STDOUT",
           "actions": [
             "file"
