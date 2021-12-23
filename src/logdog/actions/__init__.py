@@ -17,11 +17,16 @@ An action gets calles with the following parameters:
     detailed_information (str): detailed event information
     brief_information (str): brief event information
     stdout (str): captured watcher output (which contains the event)
+    timestamp (time.struct_time): a timestamp (which denotes the event time)
 
 The action can deal with this information as it like. It may also
 access configuration data stored in the config file via calling
 `logdog.config.get_action_data(action_name)`. `action_name` has to be
 the same as the function name the action gets called.
+
+The arguments detailed_information and brief_information may contain
+keywords. These keywords can be parsed by importing logdog.strings and
+using the function parse_string().
 
 Functions:
     log2mail(str, str, str): Send mail
