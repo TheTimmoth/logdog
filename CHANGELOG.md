@@ -15,7 +15,7 @@ Initial release (11.12.2021)
   - One handler checks `stdout` of exactly one watcher (e.g. `tail`)
 
 
-# Release 1.0.0b2
+# Release 1.0.0b1
 
 First beta version (16.12.2021)
 
