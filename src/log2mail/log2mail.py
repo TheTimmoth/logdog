@@ -22,7 +22,7 @@ import smtplib
 import ssl
 import sys
 from cryptography.fernet import Fernet
-from email.mime.base import MIMEBase
+from email.message import EmailMessage
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -80,26 +80,32 @@ def log2mail(config_path: str,
   context = ssl.create_default_context()
 
   # Create message
-  message = MIMEMultipart()
+  if file_paths:
+    message = MIMEMultipart()
+  else:
+    message = EmailMessage()
   message["Subject"] = subject
   message["From"] = sender
   message["To"] = ", ".join(recipients)
 
-  # Attach message text
-  message.attach(MIMEText(message_text))
+  if file_paths:
+    # Attach message text
+    message.attach(MIMEText(message_text))
 
-  # Attach file
-  for fp in file_paths:
-    try:
-      with open(fp, "rb") as f:
-        attachment = MIMEApplication(f.read())
-    except FileNotFoundError:
-      pass
-    else:
-      attachment.add_header("Content-Disposition",
-                            "attachment",
-                            filename=f"{os.path.basename(fp)}")
-      message.attach(attachment)
+    # Attach file
+    for fp in file_paths:
+      try:
+        with open(fp, "rb") as f:
+          attachment = MIMEApplication(f.read())
+      except FileNotFoundError:
+        pass
+      else:
+        attachment.add_header("Content-Disposition",
+                              "attachment",
+                              filename=f"{os.path.basename(fp)}")
+        message.attach(attachment)
+  else:
+    message.set_content(message_text)
 
   message = message.as_bytes()
 

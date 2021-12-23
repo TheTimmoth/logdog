@@ -33,10 +33,11 @@ First beta version (16.12.2021)
 Second beta version (XX.XX.XXXX)
 
 * New features
+  - Logdog: add timestamp to internal events
   - Log2Mail: add supoort for multiple recipients
   - Log2Mail: add support for multiple attachments
-  - Logdog: add timestamp to internal events
 * Changes
 * Fixes
   - Logdog: change args of watcher `tail` from `-f` to `-F` to support rolling logs
   - Logdog: fix infinite recursion if a default action fails
+  - Log2Mail: send simple EmailMessage (instead of MIMEMultipart message) when no attachments are present
