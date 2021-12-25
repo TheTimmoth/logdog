@@ -15,17 +15,17 @@ Functions:
    https://github.com/TheTimmoth/logdog/blob/main/LICENSE
 """
 
-import email
+import base64
 import json
 import os
 import smtplib
 import ssl
 import sys
-from cryptography.fernet import Fernet
 from email.message import EmailMessage
 from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from getpass import getpass
 
 
 def log2mail(config_path: str,
@@ -33,7 +33,8 @@ def log2mail(config_path: str,
              message_text: str,
              sender: str,
              recipients: list,
-             file_paths: list = None):
+             file_paths: list = None,
+             askpass: bool = False):
   """Send an email
 
   Args:
@@ -49,7 +50,7 @@ def log2mail(config_path: str,
   if file_paths == None:
     file_paths = []
 
-  # Encoded password
+  # Read config data
   try:
     with open(config_path) as f:
       config = json.load(f)
@@ -71,9 +72,8 @@ def log2mail(config_path: str,
 
   # Get SMTP login data
   username = config["smtp"]["username"]
-  secret = config["smtp"]["secret"].encode('UTF-8')
-  password = config["smtp"]["password"].encode('UTF-8')
-  cipher_suite = Fernet(secret)
+  password = getpass() if askpass else str(
+      base64.b64decode(config["smtp"]["password"]), "utf-8")
 
   # SSL
   port = 465
@@ -111,5 +111,5 @@ def log2mail(config_path: str,
 
   # Send mail
   with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-    server.login(username, cipher_suite.decrypt(password).decode())
+    server.login(username, password)
     server.sendmail(username, receiver_mail, message)

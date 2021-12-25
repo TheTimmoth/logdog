@@ -36,8 +36,10 @@ Second beta version (XX.XX.XXXX)
   - Logdog: add timestamp to internal events
   - Log2Mail: add supoort for multiple recipients
   - Log2Mail: add support for multiple attachments
+  - Log2Mail: add option to ask for a password via stdin
 * Changes
   - Logdog: update internal event descriptions
+  - Log2Mail: simplify password storage
 * Fixes
   - Logdog: change args of watcher `tail` from `-f` to `-F` to support rolling logs
   - Logdog: fix infinite recursion if a default action fails

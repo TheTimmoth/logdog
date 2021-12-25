@@ -179,19 +179,15 @@ The `log2mail` action sends an email to a defined receiver. It gets configured i
 `log2mail` requires a config file that contains login data to a mailserver that is used to send the mail.
 An example configuration is provided in the file `log2mail.json.example`. The file contains an encrypted version of the password for a mailserver together with a key to encrypt the password. **Please make sure that the file can only be accessed by yourself (and the script of course).**
 
-To generate the values needed for `secret` and `password` run the following script:
+The key `password` expects a string that contains a `base64` encoded value. It can be generated with the following script:
 ```python
 #! /usr/bin/python3
 
-from cryptography.fernet import Fernet
+import base64
 from getpass import getpass
 
-key = Fernet.generate_key()
-print(f"\"secret\": \"{key.decode('UTF-8')}\" ")
-fernet = Fernet(key)
-
-password = fernet.encrypt(getpass().encode())
-print(f"\"password\": \"{password.decode('UTF-8')}\" ")
+password = base64.b64encode(getpass().encode())
+print(f"{password.decode('utf-8')}")
 
 ```
 
