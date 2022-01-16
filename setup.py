@@ -11,7 +11,7 @@ with open("LICENSE", "r") as f:
 
 setuptools.setup(
     name="logdog-TheTimmoth",
-    version="1.0.0b1",
+    version="1.0.0b2",
     author="Tim Schlottmann",
     author_email="coding@timsc.de",
     license=license,

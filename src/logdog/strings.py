@@ -16,20 +16,25 @@ Functions:
 
 import re
 import subprocess as sp
+import time
 
 # Supported keywords for parsing. Each keyword is a 2-tuple.
 # The first element denotes the keyword as used in a string
 # The second element denotes the keyword as regular expression
-__keywords = [("hostname", "hostname"),
-              ("detailed_information", "detailed\\_information"),
-              ("brief_information", "brief\\_information"),
-              ("stdout", "stdout")]
+__keywords = [
+    ("hostname", "hostname"),
+    ("detailed_information", "detailed\\_information"),
+    ("brief_information", "brief\\_information"),
+    ("stdout", "stdout"),
+    ("timestamp", "timestamp"),
+]
 
 
 def parse_string(s: str,
                  detailed_information: str = "",
                  brief_information: str = "",
-                 stdout: str = "") -> str:
+                 stdout: str = "",
+                 timestamp: time.struct_time = None) -> str:
   """Replaces keywords in `s`with more useful information
 
   Any occurrance of a keyword in `s` is replaced with information.
@@ -42,6 +47,7 @@ def parse_string(s: str,
       $DETAILED_INFORMATION: some detailed information
       $BRIEF_INFORMATION: some brief information
       $STDOUT: the output of the watcher (which contains the event)
+      $TIMESTAMP: the time of the event
 
   Please note that the `detailed_information` or `brief_information` strings gets also parsed for keywords.
 
@@ -55,6 +61,8 @@ def parse_string(s: str,
           keyword detailed_information. Defaults to "".
       brief_information (str, optional): string that replaces keyword
           brief_information. Defaults to "".
+      stdout (str, optional): collected stdout from watcher. Defaults to "".
+      timestamp (time.struct_time, optional): a given timestamp. Defaults to None.
 
   Returns:
       str: the processed string
@@ -65,7 +73,8 @@ def parse_string(s: str,
   if detailed_information:
     detailed_information = parse_string(detailed_information,
                                         brief_information=brief_information,
-                                        stdout=stdout)
+                                        stdout=stdout,
+                                        timestamp=timestamp)
 
   # Parse brief_information for keywords
   # (The keywords brief_information, detailed_information and stdout
@@ -88,6 +97,8 @@ def parse_string(s: str,
         s = s.replace(m.group(0), brief_information)
       elif k[0] == "stdout" and stdout:
         s = s.replace(m.group(0), stdout)
+      elif k[0] == "timestamp" and timestamp:
+        s = s.replace(m.group(0), time.strftime("%b %d %H:%M:%S", timestamp))
 
   return s
 

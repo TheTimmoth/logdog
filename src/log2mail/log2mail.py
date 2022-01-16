@@ -9,28 +9,32 @@ License: `MIT`_ (Please look at license of surrounding project)
 This file contains `log2mail`, a module that sends an email.
 
 Functions:
-    log2mail(str, str, str, str, str, str): sends an email
+    log2mail(str, str, str, str, list, list): sends an email
 
 .. _MIT:
    https://github.com/TheTimmoth/logdog/blob/main/LICENSE
 """
 
-from json.decoder import JSONDecodeError
-import sys
-import smtplib, ssl
+import base64
 import json
-from cryptography.fernet import Fernet
+import os
+import smtplib
+import ssl
+import sys
+from email.message import EmailMessage
+from email.mime.application import MIMEApplication
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from os import path
+from getpass import getpass
 
 
 def log2mail(config_path: str,
              subject: str,
              message_text: str,
              sender: str,
-             recipient: str,
-             file_path: str = None):
+             recipients: list,
+             file_paths: list = None,
+             askpass: bool = False):
   """Send an email
 
   Args:
@@ -38,12 +42,15 @@ def log2mail(config_path: str,
       subject (str): subject of the mail
       message_text (str): content of the mail
       sender (str): sender of the mail
-      recipient (str): recipient of the mail
-      file_path (str, optional): Path to a text file that gets
+      recipients (list): recipient of the mail
+      file_paths (list, optional): Path to a text file that gets
           attached. Defaults to None.
   """
 
-  # Encoded password
+  if file_paths == None:
+    file_paths = []
+
+  # Read config data
   try:
     with open(config_path) as f:
       config = json.load(f)
@@ -52,7 +59,7 @@ def log2mail(config_path: str,
     sys.stderr.write(str(e) + "\n")
     sys.stderr.write("Exiting...\n")
     exit(1)
-  except JSONDecodeError as e:
+  except json.decoder.JSONDecodeError as e:
     sys.stderr.write(
         f"Error: config file {config_path} contains invalid json\n")
     sys.stderr.write(str(e) + "\n")
@@ -65,35 +72,44 @@ def log2mail(config_path: str,
 
   # Get SMTP login data
   username = config["smtp"]["username"]
-  secret = config["smtp"]["secret"].encode('UTF-8')
-  password = config["smtp"]["password"].encode('UTF-8')
-  cipher_suite = Fernet(secret)
+  password = getpass() if askpass else str(
+      base64.b64decode(config["smtp"]["password"]), "utf-8")
 
   # SSL
   port = 465
   context = ssl.create_default_context()
 
   # Create message
-  message = MIMEMultipart("mixed")
+  if file_paths:
+    message = MIMEMultipart()
+  else:
+    message = EmailMessage()
   message["Subject"] = subject
   message["From"] = sender
-  message["To"] = recipient
+  message["To"] = ", ".join(recipients)
 
-  # Attach message text
-  message.attach(MIMEText(message_text, "plain"))
+  if file_paths:
+    # Attach message text
+    message.attach(MIMEText(message_text))
 
-  # Attach file
-  if file_path:
-    with open(file_path, "r", encoding="utf8") as f:
-      attachment = MIMEText(f.read(), "plain")
-    attachment.add_header("Content-Disposition",
-                          "attachment",
-                          filename=f"{path.basename(file_path)}")
-    message.attach(attachment)
+    # Attach file
+    for fp in file_paths:
+      try:
+        with open(fp, "rb") as f:
+          attachment = MIMEApplication(f.read())
+      except FileNotFoundError:
+        pass
+      else:
+        attachment.add_header("Content-Disposition",
+                              "attachment",
+                              filename=f"{os.path.basename(fp)}")
+        message.attach(attachment)
+  else:
+    message.set_content(message_text)
 
   message = message.as_bytes()
 
   # Send mail
   with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-    server.login(username, cipher_suite.decrypt(password).decode())
+    server.login(username, password)
     server.sendmail(username, receiver_mail, message)

@@ -35,7 +35,8 @@ def handle_event(handler_name: str,
                  event_name: str,
                  brief_information: str = "",
                  detailed_information: str = "",
-                 stdout: str = ""):
+                 stdout: str = "",
+                 timestamp: time.struct_time = None):
   """Runs actions for an event discovered by a handler
 
   A handler discovers an event. The handler provides brief and
@@ -79,9 +80,10 @@ def handle_event(handler_name: str,
       handle_event(
           "logdog",
           "no_handler",
-          brief_information=f"Logdog: {handler_name}:{event_name} - no action",
+          brief_information=f"[logdog] {handler_name}:{event_name} - no action",
           detailed_information=
-          f"No specific or default action for event {event_name} of handler {handler_name}"
+          f"$TIMESTAMP logdog[no_handler]: No specific or default action for event {event_name} of handler {handler_name}",
+          timestamp=time.localtime(),
       ),
       return
 
@@ -95,12 +97,24 @@ def handle_event(handler_name: str,
             detailed_information,
             brief_information,
             stdout,
+            timestamp,
         )
       except Exception as e:
         __output_lock.release()
         s = handle_exception()
-        handle_event("logdog", "action_failed", f"Action {a} failed",
-                     f"Action {a} produced the following exception:\n{s}")
+        if a in config.get_default_action_names():
+          # Remove action from __config["logdog"]["default_actions"] to
+          # prevent from infinite loop
+          l = config.get_default_action_names()
+          l.remove(a)
+          config.set_default_action_names(l)
+        handle_event(
+            "logdog",
+            "action_failed",
+            f"[logdog] Action {a} failed",
+            f"$TIMESTAMP logdog[no_handler]: Action {a} produced the following exception:\n{s}",
+            timestamp=time.localtime(),
+        )
       else:
         __output_lock.release()
 
@@ -114,10 +128,13 @@ def handle_exit(*args):
       frame: a stack frame
   """
 
-  handle_event("logdog",
-               "handle_exit",
-               detailed_information="",
-               brief_information="Logdog exited")
+  handle_event(
+      "logdog",
+      "handle_exit",
+      detailed_information="$TIMESTAMP logdog[handle_exit]: Logdog exited",
+      brief_information="[logdog] Program exited",
+      timestamp=time.localtime(),
+  )
   for p in __processes:
     p.kill()
 
@@ -221,9 +238,11 @@ def __handler(handler_name: str):
       "logdog",
       "watcher_started",
       detailed_information=
-      f"Watcher {command[0]} of handler {handler_name} started successfully\ncwd: {cwd}",
+      f"$TIMESTAMP logdog[watcher_started]: Watcher {command[0]} of handler {handler_name} started successfully. cwd: {cwd}",
       brief_information=
-      f"Watcher {handler_name}:{command[0]} started successfully")
+      f"[logdog] Watcher {handler_name}:{command[0]} started successfully",
+      timestamp=time.localtime(),
+  )
 
   # Wait for events to occur
   current_line = 0  # Number of current line in history
@@ -263,6 +282,7 @@ def __handler(handler_name: str):
                 handler_name, p[0])["detailed_information"],
             stdout=strings.list_to_string(history[(-p[2] - p[3] - 1):],
                                           "\n\n"),
+            timestamp=time.localtime(),
         )
 
     if current_line >= max_prev_lines:
@@ -280,10 +300,14 @@ def monitor_handlers():
   while True:
     for p in __processes:
       if not p.is_alive():
-        handle_event("logdog",
-                     "worker_died",
-                     detailed_information=f"{p.name} died",
-                     brief_information="Logdog: worker died")
+        handle_event(
+            "logdog",
+            "worker_died",
+            detailed_information=
+            f"$TIMESTAMP logdog[worker_died]: {p.name} died",
+            brief_information=f"[logdog] Worker {p.name} died",
+            timestamp=time.localtime(),
+        )
         __processes.remove(p)
         # TODO: add restart (for a defined number of retries) (maybe in action?)
       time.sleep(1)

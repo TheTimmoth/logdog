@@ -24,6 +24,7 @@ Used terms:
 
 import atexit
 import signal
+import time
 
 import logdog.actions_ as actions
 import logdog.config as config
@@ -80,9 +81,12 @@ def logdog(config_file: str):
   if no_exit_notify:
     # Event "no_exit_notify" -> inform user
     handlers.handle_event(
-      "logdog",
-      "no_exit_notify",
-      brief_information="Logdog: warning - maybe no exit notify")
+        "logdog",
+        "no_exit_notify",
+        brief_information="[logdog] maybe no exit notify",
+        detailed_information=
+        "$TIMESTAMP logdog[no_exit_notify]: there may be no exit notify",
+        timestamp=time.localtime())
 
   # Spawn and monitor the handlers
   try:
@@ -94,10 +98,13 @@ def logdog(config_file: str):
     # Uncovered exception occurred
 
     try:
-      handlers.handle_event("watchdog",
-                            "exception",
-                            brief_information="Logdog: an error occurred",
-                            detailed_information=handlers.handle_exception())
+      handlers.handle_event(
+          "watchdog",
+          "exception",
+          brief_information="[logdog] an error occurred",
+          detailed_information="$TIMESTAMP logdog[exception]: " +
+          handlers.handle_exception(),
+          timestamp=time.localtime())
     except Exception as e:
       handlers.handle_exception()
 

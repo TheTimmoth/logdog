@@ -26,3 +26,21 @@ First beta version (16.12.2021)
   - Service: rename `logdog.service` to `logdog.service.template` to facilitate updates
 * Fixes
   - Logdog: output does not appear in `journalctl` instantly
+
+
+# Release 1.0.0b2
+
+Second beta version (XX.XX.XXXX)
+
+* New features
+  - Logdog: add timestamp to internal events
+  - Log2Mail: add supoort for multiple recipients
+  - Log2Mail: add support for multiple attachments
+  - Log2Mail: add option to ask for a password via stdin
+* Changes
+  - Logdog: update internal event descriptions
+  - Log2Mail: simplify password storage
+* Fixes
+  - Logdog: change args of watcher `tail` from `-f` to `-F` to support rolling logs
+  - Logdog: fix infinite recursion if a default action fails
+  - Log2Mail: send simple EmailMessage (instead of MIMEMultipart message) when no attachments are present

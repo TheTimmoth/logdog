@@ -28,6 +28,9 @@ The following command line args are necessary:
     -a /path/to/textfile          Path to a textfile that gets attached
     --attach /path/to/textfile
 
+    -p                            Ask for the password instead of
+    --password                    providing it via config file
+
     --tty                         Message content uses stdin as input
 
 .. _MIT:
@@ -45,12 +48,13 @@ def main():
   config_path = "./log2mail.json"
 
   # Default message values
-  subject: str = "sendmail.py Mail"
-  message_text: str = "This mail was created by sendmail.py script."
-  sender: str = "sendmail.py script <noreply@example.com>"
-  recipient: str = "Unknown user <noreply@example.com>"
-  tty_for_message: bool = False
-  file_path: str = None
+  subject = "sendmail.py Mail"
+  message_text = "This mail was created by sendmail.py script."
+  sender = "sendmail.py script <noreply@example.com>"
+  recipient = "Unknown user <noreply@example.com>"
+  tty_for_message = False
+  file_path = None
+  askpass = False
 
   i = 0
   while i < len(sys.argv):
@@ -75,6 +79,9 @@ def main():
     ) == "-a":
       i += 1
       file_path = sys.argv[i]
+    elif sys.argv[i].casefold() == "--password" or sys.argv[i].casefold(
+    ) == "-p":
+      askpass = True
     elif sys.argv[i].casefold() == "--tty":
       tty_for_message = True
     i += 1
@@ -83,7 +90,8 @@ def main():
   if tty_for_message:
     message_text = sys.stdin.read()
 
-  log2mail(config_path, subject, message_text, sender, recipient, file_path)
+  log2mail(config_path, subject, message_text, sender, [recipient],
+           [file_path], askpass)
 
 
 if __name__ == "__main__":
