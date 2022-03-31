@@ -4,14 +4,14 @@ import os
 import sys
 
 with open("README.md", "r") as f:
-  long_description = f.read()
+    long_description = f.read()
 
 with open("LICENSE", "r") as f:
-  license = f.read()
+    license = f.read()
 
 setuptools.setup(
     name="logdog-TheTimmoth",
-    version="1.0.0",
+    version="1.1.0",
     author="Tim Schlottmann",
     author_email="coding@timsc.de",
     license=license,
