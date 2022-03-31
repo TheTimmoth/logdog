@@ -17,7 +17,7 @@ Initial release (11.12.2021)
 
 # Release 1.0.0b1
 
-First beta version (16.12.2021)
+First beta release (16.12.2021)
 
 * New features
   - Install: check for `python3` as prerequisite
@@ -30,7 +30,7 @@ First beta version (16.12.2021)
 
 # Release 1.0.0b2
 
-Second beta version (26.12.2021)
+Second beta release (26.12.2021)
 
 * New features
   - Logdog: add timestamp to internal events
@@ -48,6 +48,17 @@ Second beta version (26.12.2021)
 
 # Release 1.0.0
 
-Final version (16.01.2022)
+Firt final release (16.01.2022)
 
 * Rerelease of 1.0.0b2
+
+
+# Release 1.1.0
+
+Minor release (xx.xx.2022)
+
+* New features
+  - Log2Mail: allow multiple attachments for bin script
+* Changes
+* Fixes
+  - Log2Mail: fix execution of bin script caused by attachment handling
